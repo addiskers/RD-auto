@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOC and RD Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Document Generator</h1>
+        <form method="POST" action="/">
+            <div class="form-group">
+                <label for="market_name">Market Name:</label>
+                <input type="text" name="market_name" id="market_name" placeholder="Enter market name (excluding market)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="value_2022">Value (2022):</label>
+                <input type="number" step="1" name="value_2022" id="value_2022" placeholder="Enter market value for 2022">
+            </div>
+
+            <div class="form-group">
+                <label for="currency">Currency:</label>
+                <select name="currency" id="currency" required>
+                    <option value="million">Million</option>
+                    <option value="billion">Billion</option>
+                    <option value="trillion">Trillion</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="cagr">CAGR (%):</label>
+                <input type="number" step="0.1" name="cagr" id="cagr" placeholder="Enter CAGR value (excluding %)" >
+            </div>
+
+            <div class="form-group">
+                <label for="kmi_data">Enter KMI:</label>
+                <textarea name="kmi_data" id="kmi_data" placeholder="Enter KMI data..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Headings and Levels:</label>
+                <div id="headings-container">
+                    <div class="heading-row">
+                        <input type="text" name="headings[]" placeholder="Enter heading or subheading"required >
+                        <select name="levels[]" required>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                        <button type="button" class="remove-btn" onclick="removeHeading(this)">Remove</button>
+                    </div>
+                </div>
+                <button type="button" class="add-btn" onclick="addHeading()">Add Another Heading</button>
+            </div>
+
+            <div class="form-group">
+                <label for="segment_data">Segments:</label>
+                <textarea name="segment_data" id="segment_data" placeholder="Enter segment data...(1. mode 1.1. cloud)"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="company_data">Enter Companies:</label>
+                <textarea name="company_data" id="company_data" placeholder="Enter company names... (without bullet)"required    ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Generate Documents</button>
+            <button type="button" class="reset-btn" onclick="resetForm()">Reset Form</button>
+            <button type="button" class="help-btn" onclick="showHelp()">Help</button>
+        </form>
+
+        {% if file_ready %}
+            <div class="download-section">
+                <p>Your documents are ready! Download them below:</p>
+                <a href="/download?file_path={{ toc_file_path }}" class="download-btn">Download TOC Document</a>
+                <a href="/download?file_path={{ rd_file_path }}" class="download-btn">Download RD Document</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function addHeading() {
+            const container = document.getElementById("headings-container");
+            const div = document.createElement("div");
+            div.classList.add("heading-row");
+            div.innerHTML = `
+                <input type="text" name="headings[]" placeholder="Enter heading or subheading" required>
+                <select name="levels[]" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+                <button type="button" class="remove-btn" onclick="removeHeading(this)">Remove</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeHeading(button) {
+            button.parentElement.remove();
+        }
+
+        function resetForm() {
+            document.querySelector("form").reset();
+        }
+
+        function showHelp() {
+            alert("NO HELP FOR YOU!!");
+        }
+    </script>
+</body>
+</html>
