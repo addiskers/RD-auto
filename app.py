@@ -5,6 +5,7 @@ from docx.oxml import OxmlElement
 from docx.shared import Pt
 import tempfile
 import os
+from docx.shared import RGBColor
 
 def transform_market_data(data,market_name):
     segments = {}
@@ -105,83 +106,84 @@ def export_to_word(data, market_name, value_2022, currency, cagr, companies, out
     doc = Document()
     formatted_output, segments = transform_market_data(data,market_name)
 
-    def set_poppins_style(paragraph, size=12, bold=False):
+    def set_poppins_style(paragraph, size=12, bold=False, color=RGBColor(0, 0, 0)):
         run = paragraph.add_run()
         run.font.name = "Poppins"
         run._element.rPr.rFonts.set(qn("w:eastAsia"), "Poppins")
         run.font.size = Pt(size)
         run.bold = bold
+        run.font.color.rgb = color  
         return run
 
     title = doc.add_heading(level=1)
-    title_run = set_poppins_style(title, size=16, bold=True)
-    title_run.text = f"Report Market"
+    title_run = set_poppins_style(title, size=16, bold=True, color=RGBColor(0, 0, 0))
+    title_run.text = "Report Name"
     text_paragraph = doc.add_paragraph()
-    text_run = set_poppins_style(text_paragraph, size=12)
+    text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
     text_run.text = f"{market_name} Market"
 
     upcoming = doc.add_heading(level=1)
-    upcoming_run = set_poppins_style(upcoming, size=16, bold=True)
+    upcoming_run = set_poppins_style(upcoming, size=16, bold=True, color=RGBColor(0, 0, 0))
     upcoming_run.text = "Upcoming"
     text_paragraph = doc.add_paragraph()
-    text_run = set_poppins_style(text_paragraph, size=12)
+    text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
     text_run.text = "No"
 
     segments_heading = doc.add_heading(level=1)
-    segments_heading_run = set_poppins_style(segments_heading, size=16, bold=True)
+    segments_heading_run = set_poppins_style(segments_heading, size=16, bold=True, color=RGBColor(0, 0, 0))
     segments_heading_run.text = "Segments"
 
     for line in formatted_output:
         if line.startswith("Segment"):
             segment_heading = doc.add_heading(level=2)
-            segment_run = set_poppins_style(segment_heading, size=16, bold=True)
+            segment_run = set_poppins_style(segment_heading, size=16, bold=True, color=RGBColor(0, 0, 0))
             segment_run.text = "Segment"
 
             segment_name_paragraph = doc.add_paragraph()
-            segment_name_run = set_poppins_style(segment_name_paragraph, size=12)
+            segment_name_run = set_poppins_style(segment_name_paragraph, size=12, color=RGBColor(0, 0, 0))
             segment_name_run.text = line.split(":")[0].replace("Segment", "").strip()
 
             sub_segment_label = doc.add_heading(level=2)
             sub_segment_label_run = set_poppins_style(
-                sub_segment_label, size=16, bold=False
+                sub_segment_label, size=16, bold=False, color=RGBColor(0, 0, 0)
             )
             sub_segment_label_run.text = "Sub-Segments"
 
             sub_segment_paragraph = doc.add_paragraph()
-            sub_segment_run = set_poppins_style(sub_segment_paragraph, size=12)
+            sub_segment_run = set_poppins_style(sub_segment_paragraph, size=12, color=RGBColor(0, 0, 0))
             sub_segment_run.text = line.split("Sub-Segments")[1].strip()
 
     market_heading = doc.add_heading(level=1)
-    market_heading_run = set_poppins_style(market_heading, size=16, bold=True)
+    market_heading_run = set_poppins_style(market_heading, size=16, bold=True, color=RGBColor(0, 0, 0))
     market_heading_run.text = "Market Insights"
 
     text_paragraph = doc.add_paragraph()
-    text_run = set_poppins_style(text_paragraph, size=12)
+    text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
     text_run.text = f"Global {market_name} Market size was valued at USD {value_2022} {currency} in 2022 and is poised to grow from USD {value_2023} {currency} in 2023 to USD {value_2024} {currency} by 2031, growing at a CAGR of {cagr}% during the forecast period (2024-2031)."
 
     market_heading_1 = doc.add_heading(level=1)
-    market_heading_run_1 = set_poppins_style(market_heading_1, size=16, bold=True)
+    market_heading_run_1 = set_poppins_style(market_heading_1, size=16, bold=True, color=RGBColor(0, 0, 0))
     market_heading_run_1.text = "Segmental Analysis"
 
     text_paragraph = doc.add_paragraph()
-    text_run = set_poppins_style(text_paragraph, size=12)
+    text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
     text_run.text = generate_segmental_analysis(segments, market_name)
 
     top_players_heading = doc.add_paragraph()
-    top_players_run = set_poppins_style(top_players_heading, size=12, bold=True)
+    top_players_run = set_poppins_style(top_players_heading, size=12, bold=True, color=RGBColor(0, 0, 0))
     top_players_run.text = "Top Player's Company Profiles"
     
     for c1 in companies.splitlines():
         company_paragraph = doc.add_paragraph(style="List Bullet")
-        company_run = set_poppins_style(company_paragraph, size=12)
+        company_run = set_poppins_style(company_paragraph, size=12, color=RGBColor(0, 0, 0))
         company_run.text = c1.strip()
 
     H1_text = doc.add_heading(level=1)
-    H1_run = set_poppins_style(H1_text, size=16, bold=True)
+    H1_run = set_poppins_style(H1_text, size=16, bold=True, color=RGBColor(0, 0, 0))
     H1_run.text = "H1 Title"
 
     text_paragraph = doc.add_paragraph()
-    text_run = set_poppins_style(text_paragraph, size=12)
+    text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
     text_run.text = title_h1(segments, market_name)
 
     doc.save(output_path)
@@ -267,8 +269,8 @@ def index():
 
         kmi_data = request.form.get("kmi_data", "").strip()
         if kmi_data:
-            data["kmi"].extend([(km.strip(), 1) for km in kmi_data.splitlines() if km.strip()])
-
+            data["kmi"].extend([(km.title().strip(), 1) for km in kmi_data.splitlines() if km.strip()])
+        print(data["kmi"])
         headings = request.form.getlist("headings[]")
         levels = request.form.getlist("levels[]")
         for heading, level in zip(headings, levels):
@@ -383,4 +385,4 @@ def download():
     )
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
