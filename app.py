@@ -86,11 +86,15 @@ def generate_segmental_analysis(segments_data, market_name):
 
 def title_h1(segments_data, market_name):
     segment_all = []
+    print(segments_data)
     for segment, sub_segments in segments_data.items():
         segment_all.append("By " + segment.title())
-    if len(segment_all) > 1:
+    print(segment_all)
+    if len(segment_all) >= 1:
         text_seg = ", ".join(segment_all)
         text = f"{market_name} Size, Share, Growth Analysis, {text_seg} , By Region - Industry Forecast 2024-2031"
+    
+
     return text
 
 def export_to_word(data, market_name, value_2022, currency, cagr, companies, output_path="Market_Report.docx"):
@@ -278,7 +282,7 @@ def index():
                 data["toc_entries"].append(("Market Overview", 1))
             else:
                 data["toc_entries"].append((heading.title(), level))
-
+        print(data["toc_entries"])
         segment_data = request.form.get("segment_data", "").strip()
         if segment_data:
             for seg in segment_data.splitlines():
@@ -337,7 +341,6 @@ def index():
         for region, subregions in regions:
             data["regions"].append((f"{region} ({segment_text})", 1))
             data["regions"].extend([(subregion, 2) for subregion in subregions])
-
         toc_content = data["kmi"] + data["toc_entries"] + data["segments"] + data["regions"] + data["companies"]
 
         toc_doc = Document(doc_path)
@@ -346,7 +349,7 @@ def index():
 
         toc_temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".docx")
         toc_doc.save(toc_temp_file.name)
-
+        
         rd_temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".docx")
         export_to_word(
             data=data["toc_entries"] + data["segments"],
