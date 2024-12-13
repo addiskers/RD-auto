@@ -86,10 +86,8 @@ def generate_segmental_analysis(segments_data, market_name):
 
 def title_h1(segments_data, market_name):
     segment_all = []
-    print(segments_data)
     for segment, sub_segments in segments_data.items():
         segment_all.append("By " + segment.title())
-    print(segment_all)
     if len(segment_all) >= 1:
         text_seg = ", ".join(segment_all)
         text = f"{market_name} Size, Share, Growth Analysis, {text_seg} , By Region - Industry Forecast 2024-2031"
@@ -282,7 +280,7 @@ def index():
                 data["toc_entries"].append(("Market Overview", 1))
             else:
                 data["toc_entries"].append((heading.title(), level))
-        print(data["toc_entries"])
+
         segment_data = request.form.get("segment_data", "").strip()
         if segment_data:
             for seg in segment_data.splitlines():
