@@ -115,7 +115,7 @@ def export_to_word(data, market_name, value_2022, currency, cagr, companies, out
 
     title = doc.add_heading(level=1)
     title_run = set_poppins_style(title, size=16, bold=True)
-    title_run.text = f"{market_name} Market"
+    title_run.text = f"Report Market"
     text_paragraph = doc.add_paragraph()
     text_run = set_poppins_style(text_paragraph, size=12)
     text_run.text = f"{market_name} Market"
@@ -316,7 +316,7 @@ def index():
             for company in company_data.splitlines():
                 company_name = company.strip()
                 if company_name:
-                    data["companies"].append((company_name.title(), 1))  
+                    data["companies"].append((company_name, 1))  
                     data["companies"].extend([ 
                         ("Company Overview", 2),
                         ("Business Segment Overview", 2),
