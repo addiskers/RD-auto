@@ -193,9 +193,13 @@ def export_to_word(data, market_name, value_2022, currency, cagr, companies, out
     H1_run.text = "H1 Title"
 
     text_paragraph = doc.add_paragraph()
-    text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
-    text_run.text = title_h1(segments, market_name)
-
+    title_text = title_h1(segments, market_name)
+    text_run = set_poppins_style(
+        text_paragraph,
+        size=12,
+        color=RGBColor(255, 0, 0) if len(title_text.split()) > 35 else RGBColor(0, 0, 0)
+    )
+    text_run.text = title_text
     doc.save(output_path)
     return output_path
 
