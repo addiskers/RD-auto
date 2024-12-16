@@ -87,14 +87,24 @@ def generate_segmental_analysis(segments_data, market_name):
 
 def title_h1(segments_data, market_name):
     segment_all = []
+    
     for segment, sub_segments in segments_data.items():
-        segment_all.append("By " + segment.title())
+        if sub_segments:
+            collected_subsegments = [sub if isinstance(sub, str) else sub[0] for sub in sub_segments[:2]]
+            subsegments_text = f" ({', '.join(collected_subsegments)})"
+        else:
+            subsegments_text = ""
+        
+        segment_all.append("By " + segment.title() + subsegments_text)
+
     if len(segment_all) >= 1:
         text_seg = ", ".join(segment_all)
-        text = f"{market_name} Size, Share, Growth Analysis, {text_seg} , By Region - Industry Forecast 2024-2031"
-    
+        text = f"{market_name} Size, Share, Growth Analysis, {text_seg}, By Region - Industry Forecast 2024-2031"
+    else:
+        text = f"{market_name} Size, Share, Growth Analysis, By Region - Industry Forecast 2024-2031"
 
     return text
+
 
 def export_to_word(data, market_name, value_2022, currency, cagr, companies, output_path="Market_Report.docx"):
 
@@ -252,6 +262,7 @@ def index():
         "segments": [],
         "regions": [],
         "companies": [],
+        "conclusion":[("Conclusion & Recommendations",0)]
     }
     raw_segments = []
     market_details = {
@@ -341,16 +352,19 @@ def index():
         for region, subregions in regions:
             data["regions"].append((f"{region} ({segment_text})", 1))
             data["regions"].extend([(subregion, 2) for subregion in subregions])
-        toc_content = data["kmi"] + data["toc_entries"] + data["segments"] + data["regions"] + data["companies"]
+        toc_content = data["kmi"] + data["toc_entries"] + data["segments"] + data["regions"] + data["companies"]+data["conclusion"]
+
+        toc_temp_file_name = f"TOC_{market_name}_Market_SkyQuest.docx"
+        rd_temp_file_name = f"RD_{market_name}_SkyQuest.docx"
+
+        toc_temp_file_path = os.path.join(tempfile.gettempdir(), toc_temp_file_name)
+        rd_temp_file_path = os.path.join(tempfile.gettempdir(), rd_temp_file_name)
 
         toc_doc = Document(doc_path)
         for heading, level in toc_content:
             add_bullet_point_text(toc_doc, heading, level)
+        toc_doc.save(toc_temp_file_path)
 
-        toc_temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".docx")
-        toc_doc.save(toc_temp_file.name)
-        
-        rd_temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".docx")
         export_to_word(
             data=data["toc_entries"] + data["segments"],
             market_name=market_name,
@@ -358,14 +372,14 @@ def index():
             currency=market_details["currency"],
             cagr=market_details["cagr"],
             companies=company_data,
-            output_path=rd_temp_file.name
+            output_path=rd_temp_file_path
         )
 
         return render_template(
             "index.html",
             file_ready=True,
-            toc_file_path=toc_temp_file.name,
-            rd_file_path=rd_temp_file.name
+            toc_file_path=toc_temp_file_path,
+            rd_file_path=rd_temp_file_path
         )
 
     return render_template("index.html", file_ready=False)
@@ -375,12 +389,15 @@ def index():
 @app.route("/download")
 def download():
     file_path = request.args.get("file_path")
+    
     if not file_path or not os.path.exists(file_path):
         return "Error: The file does not exist. Please generate the document first.", 404
+    file_name = os.path.basename(file_path)
+    
     return send_file(
         file_path,
         as_attachment=True,
-        download_name="document.docx",
+        download_name=file_name, 
         mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     )
 
