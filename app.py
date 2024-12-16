@@ -99,9 +99,9 @@ def title_h1(segments_data, market_name):
 
     if len(segment_all) >= 1:
         text_seg = ", ".join(segment_all)
-        text = f"{market_name} Size, Share, Growth Analysis, {text_seg}, By Region - Industry Forecast 2024-2031"
+        text = f"{market_name} Market Size, Share, Growth Analysis, {text_seg}, By Region - Industry Forecast 2024-2031"
     else:
-        text = f"{market_name} Size, Share, Growth Analysis, By Region - Industry Forecast 2024-2031"
+        text = f"{market_name} Market Size, Share, Growth Analysis, By Region - Industry Forecast 2024-2031"
 
     return text
 
