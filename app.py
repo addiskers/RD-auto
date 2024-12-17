@@ -89,12 +89,16 @@ def title_h1(segments_data, market_name):
     segment_all = []
     
     for segment, sub_segments in segments_data.items():
-        if sub_segments:
-            collected_subsegments = [sub if isinstance(sub, str) else sub[0] for sub in sub_segments[:2]]
-            subsegments_text = f" ({', '.join(collected_subsegments)})"
+        top_level_subsegments = []  
+        
+        for sub in sub_segments:
+            if isinstance(sub, str):  
+                top_level_subsegments.append(sub)
+        if top_level_subsegments:
+            subsegments_text = f" ({', '.join(top_level_subsegments[:2])})"
         else:
             subsegments_text = ""
-        
+
         segment_all.append("By " + segment.title() + subsegments_text)
 
     if len(segment_all) >= 1:
@@ -350,7 +354,7 @@ def index():
 
         data["regions"].append((f"Global {market_name} Market Size & CAGR (2024-2031)", 0))
         segment_text = ", ".join(raw_segments) if raw_segments else "No segments available"
-
+        print(data["segments"])
         for region, subregions in regions:
             data["regions"].append((f"{region} ({segment_text})", 1))
             data["regions"].extend([(subregion, 2) for subregion in subregions])
@@ -404,4 +408,4 @@ def download():
     )
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5001)
