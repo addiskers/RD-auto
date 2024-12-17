@@ -306,11 +306,9 @@ def index():
                 if seg_level == 0:
                     raw_segments.append(cleaned)
                     cleaned_1 = f"Global {market_name} Market Size by {cleaned} & CAGR (2024-2031)"
-                    if cleaned_1 not in [seg[0] for seg in data["segments"]]:
-                        data["segments"].append((cleaned_1, seg_level))
-                        data["segments"].append(("Market Overview", 1))
+                    data["segments"].append((cleaned_1, seg_level))
+                    data["segments"].append(("Market Overview", 1))
                 else:
-                    if cleaned not in [seg[0] for seg in data["segments"]]:
                         data["segments"].append((cleaned, seg_level))
 
         company_data = request.form.get("company_data", "").strip()
