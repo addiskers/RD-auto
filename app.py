@@ -345,7 +345,7 @@ def index():
 
 
         regions = [
-            ("North America", ["USA", "Canada"]),
+            ("North America", ["US", "Canada"]),
             ("Europe", ["Germany", "Spain", "France", "UK", "Italy", "Rest of Europe"]),
             ("Asia Pacific", ["China", "India", "Japan", "South Korea", "Rest of Asia-Pacific"]),
             ("Latin America", ["Brazil", "Rest of Latin America"]),
