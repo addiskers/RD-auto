@@ -103,9 +103,9 @@ def title_h1(segments_data, market_name):
 
     if len(segment_all) >= 1:
         text_seg = ", ".join(segment_all)
-        text = f"{market_name} Market Size, Share, Growth Analysis, {text_seg}, By Region - Industry Forecast 2024-2032"
+        text = f"{market_name} Market Size, Share, Growth Analysis, {text_seg}, By Region - Industry Forecast 2025-2032"
     else:
-        text = f"{market_name} Market Size, Share, Growth Analysis, By Region - Industry Forecast 2024-2032"
+        text = f"{market_name} Market Size, Share, Growth Analysis, By Region - Industry Forecast 2025-2032"
 
     return text
 
@@ -173,7 +173,7 @@ def export_to_word(data, market_name, value_2023, currency, cagr, companies, out
 
     text_paragraph = doc.add_paragraph()
     text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
-    text_run.text = f"Global {market_name} Market size was valued at USD {value_2023} {currency} in 2023 and is poised to grow from USD {value_2024} {currency} in 2024 to USD {value_2024} {currency} by 2032, growing at a CAGR of {cagr}% during the forecast period (2024-2032)."
+    text_run.text = f"Global {market_name} Market size was valued at USD {value_2023} {currency} in 2023 and is poised to grow from USD {value_2024} {currency} in 2024 to USD {value_2024} {currency} by 2032, growing at a CAGR of {cagr}% during the forecast period (2025-2032)."
 
     market_heading_1 = doc.add_heading(level=1)
     market_heading_run_1 = set_poppins_style(market_heading_1, size=16, bold=True, color=RGBColor(0, 0, 0))
