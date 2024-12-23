@@ -51,17 +51,17 @@ def generate_segmental_analysis(segments_data, market_name):
     segment_details = []
 
     for segment, sub_segments in segments_data.items():
-        segment_names.append(segment.lower())
+        segment_names.append(segment)
         sub_details = []
         for i, sub in enumerate(sub_segments):
             if isinstance(sub, list):
                 continue
             else:
-                sub_details.append(sub.lower())
+                sub_details.append(sub)
 
         if not sub_details:
             segment_details.append(
-                f"Based on {segment.lower()}, no specific sub-segments were identified."
+                f"Based on {segment}, no specific sub-segments were identified."
             )
         elif len(sub_details) > 1:
             joined_sub_details = ", ".join(sub_details[:-1]) + " and " + sub_details[-1]
@@ -70,7 +70,7 @@ def generate_segmental_analysis(segments_data, market_name):
 
         if sub_details:
             segment_details.append(
-                f"Based on {segment.lower()}, the market is segmented into {joined_sub_details}."
+                f"Based on {segment}, the market is segmented into {joined_sub_details}."
             )
 
     if len(segment_names) > 1:
@@ -99,7 +99,7 @@ def title_h1(segments_data, market_name):
         else:
             subsegments_text = ""
 
-        segment_all.append("By " + segment.title() + subsegments_text)
+        segment_all.append("By " + segment + subsegments_text)
 
     if len(segment_all) >= 1:
         text_seg = ", ".join(segment_all)
@@ -113,9 +113,9 @@ def title_h1(segments_data, market_name):
 def export_to_word(data, market_name, value_2023, currency, cagr, companies, output_path="Market_Report.docx"):
 
     value_2024 = value_2023 * (1 + cagr / 100) ** 1
-    value_2024 = value_2023 * (1 + cagr / 100) ** 9
+    value_2032 = value_2023 * (1 + cagr / 100) ** 9
     value_2024 = round(value_2024, 2)
-    value_2024 = round(value_2024, 2)
+    value_2032 = round(value_2032, 2)
 
     doc = Document()
     formatted_output, segments = transform_market_data(data,market_name)
@@ -173,7 +173,7 @@ def export_to_word(data, market_name, value_2023, currency, cagr, companies, out
 
     text_paragraph = doc.add_paragraph()
     text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
-    text_run.text = f"Global {market_name} Market size was valued at USD {value_2023} {currency} in 2023 and is poised to grow from USD {value_2024} {currency} in 2024 to USD {value_2024} {currency} by 2032, growing at a CAGR of {cagr}% during the forecast period (2025-2032)."
+    text_run.text = f"Global {market_name} Market size was valued at USD {value_2023} {currency} in 2023 and is poised to grow from USD {value_2024} {currency} in 2024 to USD {value_2032} {currency} by 2032, growing at a CAGR of {cagr}% during the forecast period (2025-2032)."
 
     market_heading_1 = doc.add_heading(level=1)
     market_heading_run_1 = set_poppins_style(market_heading_1, size=16, bold=True, color=RGBColor(0, 0, 0))
@@ -226,7 +226,7 @@ def clean(name):
     a = name.split(" ", 1)[1]
     if "(Page No." in a:
         a = a.split(" (Page No.", 1)[0].strip()
-    return a.title().strip()
+    return a.strip()
 
 def get_level1(i):
     try:
@@ -243,7 +243,7 @@ def clean1(name):
         a = name.split(" ", 1)[1]
     if "(Page No." in a:
         a = a.split(" (Page No.", 1)[0].strip()
-    return a.title().strip()
+    return a.strip()
 
 def add_bullet_point_text(doc, text, level):
     paragraph = doc.add_paragraph(text)
@@ -274,15 +274,14 @@ def index():
     }
     raw_segments = []
     market_details = {
-    "market_name": request.form.get("market_name", "").strip().title(),
+    "market_name": request.form.get("market_name", "").strip(),
     "value_2023": float(request.form.get("value_2023") or  0),
-    "currency": request.form.get("currency", "million").strip().lower(),
+    "currency": request.form.get("currency", "million").strip(),
     "cagr": float(request.form.get("cagr") or 0),
     }
 
     if request.method == "POST":
         market_name = request.form.get("market_name", "").strip()
-        market_name=market_name.title()
         if not market_name:
             return render_template("index.html", error="Market name is required!")
 
