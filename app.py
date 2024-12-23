@@ -103,19 +103,19 @@ def title_h1(segments_data, market_name):
 
     if len(segment_all) >= 1:
         text_seg = ", ".join(segment_all)
-        text = f"{market_name} Market Size, Share, Growth Analysis, {text_seg}, By Region - Industry Forecast 2024-2031"
+        text = f"{market_name} Market Size, Share, Growth Analysis, {text_seg}, By Region - Industry Forecast 2024-2032"
     else:
-        text = f"{market_name} Market Size, Share, Growth Analysis, By Region - Industry Forecast 2024-2031"
+        text = f"{market_name} Market Size, Share, Growth Analysis, By Region - Industry Forecast 2024-2032"
 
     return text
 
 
-def export_to_word(data, market_name, value_2022, currency, cagr, companies, output_path="Market_Report.docx"):
+def export_to_word(data, market_name, value_2023, currency, cagr, companies, output_path="Market_Report.docx"):
 
-    value_2023 = value_2022 * (1 + cagr / 100) ** 1
-    value_2024 = value_2022 * (1 + cagr / 100) ** 9
+    value_2024 = value_2023 * (1 + cagr / 100) ** 1
+    value_2024 = value_2023 * (1 + cagr / 100) ** 9
     value_2024 = round(value_2024, 2)
-    value_2023 = round(value_2023, 2)
+    value_2024 = round(value_2024, 2)
 
     doc = Document()
     formatted_output, segments = transform_market_data(data,market_name)
@@ -173,7 +173,7 @@ def export_to_word(data, market_name, value_2022, currency, cagr, companies, out
 
     text_paragraph = doc.add_paragraph()
     text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
-    text_run.text = f"Global {market_name} Market size was valued at USD {value_2022} {currency} in 2022 and is poised to grow from USD {value_2023} {currency} in 2023 to USD {value_2024} {currency} by 2031, growing at a CAGR of {cagr}% during the forecast period (2024-2031)."
+    text_run.text = f"Global {market_name} Market size was valued at USD {value_2023} {currency} in 2023 and is poised to grow from USD {value_2024} {currency} in 2024 to USD {value_2024} {currency} by 2032, growing at a CAGR of {cagr}% during the forecast period (2024-2032)."
 
     market_heading_1 = doc.add_heading(level=1)
     market_heading_run_1 = set_poppins_style(market_heading_1, size=16, bold=True, color=RGBColor(0, 0, 0))
@@ -275,7 +275,7 @@ def index():
     raw_segments = []
     market_details = {
     "market_name": request.form.get("market_name", "").strip().title(),
-    "value_2022": float(request.form.get("value_2022") or  0),
+    "value_2023": float(request.form.get("value_2023") or  0),
     "currency": request.form.get("currency", "million").strip().lower(),
     "cagr": float(request.form.get("cagr") or 0),
     }
@@ -296,7 +296,7 @@ def index():
             level = int(level)
             if level == 0:
                 raw_segments.append(heading.title())
-                toc_heading = f"Global {market_name} Market Size by {heading.title()} & CAGR (2024-2031)"
+                toc_heading = f"Global {market_name} Market Size by {heading.title()} & CAGR (2025-2032)"
                 data["toc_entries"].append((toc_heading, level))
                 data["toc_entries"].append(("Market Overview", 1))
             else:
@@ -309,7 +309,7 @@ def index():
                 cleaned = clean1(seg)
                 if seg_level == 0:
                     raw_segments.append(cleaned)
-                    cleaned_1 = f"Global {market_name} Market Size by {cleaned} & CAGR (2024-2031)"
+                    cleaned_1 = f"Global {market_name} Market Size by {cleaned} & CAGR (2025-2032)"
                     data["segments"].append((cleaned_1, seg_level))
                     data["segments"].append(("Market Overview", 1))
                 else:
@@ -320,15 +320,15 @@ def index():
             data["companies"].extend([
                 ("Competitive Intelligence", 0),
                 ("Top 5 Player Comparison", 1),
-                ("Market Positioning of Key Players, 2023", 1),
+                ("Market Positioning of Key Players, 2024", 1),
                 ("Strategies Adopted by Key Market Players", 1),
                 ("Recent Developments in the Market", 1),
-                ("Company Market Share Analysis, 2023", 1),
+                ("Company Market Share Analysis, 2024", 1),
                 ("Company Profiles of All Key Players", 1),
                 ("Company Details", 2),
                 ("Product Portfolio Analysis", 2),
                 ("Company's Segmental Share Analysis", 2),
-                ("Revenue Y-O-Y Comparison (2021-2023)", 2),
+                ("Revenue Y-O-Y Comparison (2022-2024)", 2),
                 ("Key Company Profiles", 0),
             ])
 
@@ -352,7 +352,7 @@ def index():
             ("Middle East & Africa", ["GCC Countries", "South Africa", "Rest of Middle East & Africa"]),
         ]
 
-        data["regions"].append((f"Global {market_name} Market Size & CAGR (2024-2031)", 0))
+        data["regions"].append((f"Global {market_name} Market Size & CAGR (2025-2032)", 0))
         segment_text = ", ".join(raw_segments) if raw_segments else "No segments available"
         print(data["segments"])
         for region, subregions in regions:
@@ -374,7 +374,7 @@ def index():
         export_to_word(
             data=data["toc_entries"] + data["segments"],
             market_name=market_name,
-            value_2022=market_details["value_2022"],
+            value_2023=market_details["value_2023"],
             currency=market_details["currency"],
             cagr=market_details["cagr"],
             companies=company_data,
