@@ -368,7 +368,7 @@ def index():
         for heading, level in toc_content:
             if heading == "__INSERT_ITALIC_AFTER_KEY_DEVELOPMENTS__":
                 p = toc_doc.add_paragraph()
-                run = p.add_run("Similar information will be covered for below listed companies")
+                run = p.add_run("Similar information will be covered for below listed companies. Detailed financial will be provided for public listed companies only. List of companies mentioned below are for indicative purpose.")
                 run.italic = True
             else:
                 add_bullet_point_text(toc_doc, heading, level)
