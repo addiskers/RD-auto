@@ -7,7 +7,7 @@ import tempfile
 import os
 from docx.shared import RGBColor
 
-def transform_market_data(data,market_name):
+def transform_market_data(data, market_name):
     segments = {}
     current_segment = None
     current_level = 0
@@ -53,7 +53,7 @@ def generate_segmental_analysis(segments_data, market_name):
     for segment, sub_segments in segments_data.items():
         segment_names.append(segment)
         sub_details = []
-        for i, sub in enumerate(sub_segments):
+        for sub in sub_segments:
             if isinstance(sub, list):
                 continue
             else:
@@ -111,14 +111,13 @@ def title_h1(segments_data, market_name):
 
 
 def export_to_word(data, market_name, value_2023, currency, cagr, companies, output_path="Market_Report.docx"):
-
     value_2024 = value_2023 * (1 + cagr / 100) ** 1
     value_2032 = value_2023 * (1 + cagr / 100) ** 9
     value_2024 = round(value_2024, 2)
     value_2032 = round(value_2032, 2)
 
     doc = Document()
-    formatted_output, segments = transform_market_data(data,market_name)
+    formatted_output, segments = transform_market_data(data, market_name)
 
     def set_poppins_style(paragraph, size=12, bold=False, color=RGBColor(0, 0, 0)):
         run = paragraph.add_run()
@@ -173,7 +172,11 @@ def export_to_word(data, market_name, value_2023, currency, cagr, companies, out
 
     text_paragraph = doc.add_paragraph()
     text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
-    text_run.text = f"Global {market_name} Market size was valued at USD {value_2023} {currency} in 2023 and is poised to grow from USD {value_2024} {currency} in 2024 to USD {value_2032} {currency} by 2032, growing at a CAGR of {cagr}% during the forecast period (2025-2032)."
+    text_run.text = (
+        f"Global {market_name} Market size was valued at USD {value_2023} {currency} in 2023 "
+        f"and is poised to grow from USD {value_2024} {currency} in 2024 to USD {value_2032} {currency} by 2032, "
+        f"growing at a CAGR of {cagr}% during the forecast period (2025-2032)."
+    )
 
     market_heading_1 = doc.add_heading(level=1)
     market_heading_run_1 = set_poppins_style(market_heading_1, size=16, bold=True, color=RGBColor(0, 0, 0))
@@ -270,14 +273,14 @@ def index():
         "segments": [],
         "regions": [],
         "companies": [],
-        "conclusion":[("Conclusion & Recommendations",0)]
+        "conclusion":[("Conclusion & Analyst Recommendations",0)]
     }
     raw_segments = []
     market_details = {
-    "market_name": request.form.get("market_name", "").strip(),
-    "value_2023": float(request.form.get("value_2023") or  0),
-    "currency": request.form.get("currency", "million").strip(),
-    "cagr": float(request.form.get("cagr") or 0),
+        "market_name": request.form.get("market_name", "").strip(),
+        "value_2023": float(request.form.get("value_2023") or  0),
+        "currency": request.form.get("currency", "million").strip(),
+        "cagr": float(request.form.get("cagr") or 0),
     }
 
     if request.method == "POST":
@@ -288,14 +291,14 @@ def index():
         kmi_data = request.form.get("kmi_data", "").strip()
         if kmi_data:
             data["kmi"].extend([(km.title().strip(), 1) for km in kmi_data.splitlines() if km.strip()])
-        print(data["kmi"])
+
         headings = request.form.getlist("headings[]")
         levels = request.form.getlist("levels[]")
         for heading, level in zip(headings, levels):
             level = int(level)
             if level == 0:
                 raw_segments.append(heading.title())
-                toc_heading = f"Global {market_name} Market Size by {heading.title()} & CAGR (2025-2032)"
+                toc_heading = f"Global {market_name} Market Size by {heading.title()} (2025-2032)"
                 data["toc_entries"].append((toc_heading, level))
                 data["toc_entries"].append(("Market Overview", 1))
             else:
@@ -308,40 +311,35 @@ def index():
                 cleaned = clean1(seg)
                 if seg_level == 0:
                     raw_segments.append(cleaned)
-                    cleaned_1 = f"Global {market_name} Market Size by {cleaned} & CAGR (2025-2032)"
+                    cleaned_1 = f"Global {market_name} Market Size by {cleaned} (2025-2032)"
                     data["segments"].append((cleaned_1, seg_level))
                     data["segments"].append(("Market Overview", 1))
                 else:
-                        data["segments"].append((cleaned, seg_level))
+                    data["segments"].append((cleaned, seg_level))
 
         company_data = request.form.get("company_data", "").strip()
         if company_data:
             data["companies"].extend([
-                ("Competitive Intelligence", 0),
+                ("Competitive Dashboard", 0),
                 ("Top 5 Player Comparison", 1),
                 ("Market Positioning of Key Players, 2024", 1),
                 ("Strategies Adopted by Key Market Players", 1),
                 ("Recent Developments in the Market", 1),
                 ("Company Market Share Analysis, 2024", 1),
-                ("Company Profiles of All Key Players", 1),
-                ("Company Details", 2),
-                ("Product Portfolio Analysis", 2),
-                ("Company's Segmental Share Analysis", 2),
-                ("Revenue Y-O-Y Comparison (2022-2024)", 2),
                 ("Key Company Profiles", 0),
             ])
 
-            for company in company_data.splitlines():
-                company_name = company.strip()
-                if company_name:
-                    data["companies"].append((company_name, 1))  
-                    data["companies"].extend([ 
+            company_lines = [line.strip() for line in company_data.splitlines() if line.strip()]
+            for idx, company_name in enumerate(company_lines):
+                data["companies"].append((company_name, 1))
+                if idx == 0:
+                    data["companies"].extend([
                         ("Company Overview", 2),
-                        ("Business Segment Overview", 2),
-                        ("Financial Updates", 2),
+                        ("Product Portfolio Overview", 2),
+                        ("Financial Overview", 2),
                         ("Key Developments", 2),
                     ])
-
+                    data["companies"].append(("__INSERT_ITALIC_AFTER_KEY_DEVELOPMENTS__", 1))
 
         regions = [
             ("North America", ["US", "Canada"]),
@@ -351,13 +349,14 @@ def index():
             ("Middle East & Africa", ["GCC Countries", "South Africa", "Rest of Middle East & Africa"]),
         ]
 
-        data["regions"].append((f"Global {market_name} Market Size & CAGR (2025-2032)", 0))
-        segment_text = ", ".join(raw_segments) if raw_segments else "No segments available"
-        print(data["segments"])
+        data["regions"].append((f"Global {market_name} Market Size (2025-2032)", 0))
+        segment_text_list = [f"By {segment}" for segment in raw_segments] if raw_segments else ["No segments available"]
+        segment_text = ", ".join(segment_text_list)
         for region, subregions in regions:
             data["regions"].append((f"{region} ({segment_text})", 1))
             data["regions"].extend([(subregion, 2) for subregion in subregions])
-        toc_content = data["kmi"] + data["toc_entries"] + data["segments"] + data["regions"] + data["companies"]+data["conclusion"]
+
+        toc_content = data["kmi"] + data["toc_entries"] + data["segments"] + data["regions"] + data["companies"] + data["conclusion"]
 
         toc_temp_file_name = f"TOC_{market_name}_Market_SkyQuest.docx"
         rd_temp_file_name = f"RD_{market_name}_SkyQuest.docx"
@@ -367,7 +366,13 @@ def index():
 
         toc_doc = Document(doc_path)
         for heading, level in toc_content:
-            add_bullet_point_text(toc_doc, heading, level)
+            if heading == "__INSERT_ITALIC_AFTER_KEY_DEVELOPMENTS__":
+                p = toc_doc.add_paragraph()
+                run = p.add_run("Similar information will be covered for below listed companies")
+                run.italic = True
+            else:
+                add_bullet_point_text(toc_doc, heading, level)
+
         toc_doc.save(toc_temp_file_path)
 
         export_to_word(
@@ -388,7 +393,6 @@ def index():
         )
 
     return render_template("index.html", file_ready=False)
-
 
 
 @app.route("/download")
