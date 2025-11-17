@@ -103,9 +103,9 @@ def title_h1(segments_data, market_name):
 
     if len(segment_all) >= 1:
         text_seg = ", ".join(segment_all)
-        text = f"{market_name} Market Size, Share, Growth Analysis, {text_seg}, By Region - Industry Forecast 2025-2032"
+        text = f"{market_name} Market Size, Share, Growth Analysis, {text_seg}, By Region - Industry Forecast 2026-2033"
     else:
-        text = f"{market_name} Market Size, Share, Growth Analysis, By Region - Industry Forecast 2025-2032"
+        text = f"{market_name} Market Size, Share, Growth Analysis, By Region - Industry Forecast 2026-2033"
 
     return text
 
@@ -173,9 +173,9 @@ def export_to_word(data, market_name, value_2023, currency, cagr, companies, out
     text_paragraph = doc.add_paragraph()
     text_run = set_poppins_style(text_paragraph, size=12, color=RGBColor(0, 0, 0))
     text_run.text = (
-        f"Global {market_name} Market size was valued at USD {value_2023} {currency} in 2023 "
-        f"and is poised to grow from USD {value_2024} {currency} in 2024 to USD {value_2032} {currency} by 2032, "
-        f"growing at a CAGR of {cagr}% during the forecast period (2025-2032)."
+        f"Global {market_name} Market size was valued at USD {value_2023} {currency} in 2024 "
+        f"and is poised to grow from USD {value_2024} {currency} in 2025 to USD {value_2032} {currency} by 2033, "
+        f"growing at a CAGR of {cagr}% during the forecast period (2026-2033)."
     )
 
     market_heading_1 = doc.add_heading(level=1)
@@ -298,7 +298,7 @@ def index():
             level = int(level)
             if level == 0:
                 raw_segments.append(heading.title())
-                toc_heading = f"Global {market_name} Market Size by {heading.title()} (2025-2032)"
+                toc_heading = f"Global {market_name} Market Size by {heading.title()} (2026-2033)"
                 data["toc_entries"].append((toc_heading, level))
                 data["toc_entries"].append(("Market Overview", 1))
             else:
@@ -311,7 +311,7 @@ def index():
                 cleaned = clean1(seg)
                 if seg_level == 0:
                     raw_segments.append(cleaned)
-                    cleaned_1 = f"Global {market_name} Market Size by {cleaned} (2025-2032)"
+                    cleaned_1 = f"Global {market_name} Market Size by {cleaned} (2026-2033)"
                     data["segments"].append((cleaned_1, seg_level))
                     data["segments"].append(("Market Overview", 1))
                 else:
@@ -322,10 +322,10 @@ def index():
             data["companies"].extend([
                 ("Competitive Dashboard", 0),
                 ("Top 5 Player Comparison", 1),
-                ("Market Positioning of Key Players, 2024", 1),
+                ("Market Positioning of Key Players, 2025", 1),
                 ("Strategies Adopted by Key Market Players", 1),
                 ("Recent Developments in the Market", 1),
-                ("Company Market Share Analysis, 2024", 1),
+                ("Company Market Share Analysis, 2025", 1),
                 ("Key Company Profiles", 0),
             ])
 
@@ -349,7 +349,7 @@ def index():
             ("Middle East & Africa", ["GCC Countries", "South Africa", "Rest of Middle East & Africa"]),
         ]
 
-        data["regions"].append((f"Global {market_name} Market Size (2025-2032)", 0))
+        data["regions"].append((f"Global {market_name} Market Size by Region (2026-2033)", 0))
         segment_text_list = [f"By {segment}" for segment in raw_segments] if raw_segments else ["No segments available"]
         segment_text = ", ".join(segment_text_list)
         for region, subregions in regions:
